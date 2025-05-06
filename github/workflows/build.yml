@@ -1,0 +1,34 @@
+yaml:
+
+name: Build BoosterApp
+on:
+  workflow_dispatch:
+
+  jobs:
+    build:
+      runs-on: windows-latest
+
+      steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pyinstaller -m pip install --upgrade pip
+          pip instal pyinstaller pyqt5
+
+      - name: Build with Pyinstaller
+        run: |
+          pyinstaller --onefile --windowed --icon=ak_icon.ico Booster.py
+
+      - name: Upload artifact
+        uses: actions/uplaod -artifact@v4
+        with:
+          name: BoosterApp
+          path: dist/Booster.exe
+          
