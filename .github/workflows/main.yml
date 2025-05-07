@@ -21,12 +21,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyqt5 pyinstaller
 
-      - name: Build the EXE
+      - name: Build the EXE and log output
         run: |
-          pyinstaller --onefile --windowed --icon=ak_icon.ico Booster.py
+          pyinstaller --onefile --windowed --icon=ak_icon.ico Booster.py > log.txt 2>&1 || exit 1
 
-      - name: Upload executable
+      - name: Upload logs if build failed
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: BoosterApp
-          path: dist/Booster.exe
+          name: build-log
+          path: log.txt
